@@ -15,13 +15,6 @@ command_not_found_handle() {
 
     # lots of code taken from https://www.linuxjournal.com/content/bash-command-not-found
  
-    # check if we are in a pipe, otherwise fail as usual
-    if [ -t 0 ]
-    then
-        old_command_not_found_handle "$@"
-        return $?
-    fi
-
     cmd="$1"
 
     if [[ "$cmd" =~ ^\+?[0-9]:$ ]]

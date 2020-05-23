@@ -27,13 +27,14 @@ command_not_found_handle() {
     if [[ "$cmd" =~ ^+?[0-9]:$ ]]
     then
         shift
-        tail -n "$cmd" "$@"
+        tail -n "${cmd/:/}" "$@"
     elif [[ "$cmd" =~ ^:-?[0-9]$ ]]
     then
         shift
-        head -n "$cmd" "$@"
+        head -n "${cmd/:/}" "$@"
     else
-        grep "$@"
+        old_command_not_found_handle "$@"
+        return $?
     fi
         
     return 127
@@ -44,16 +45,20 @@ command_not_found_handle() {
 # sub "s/pattern/replacement/flags" "s/pattern/replacement/flags" "s/pattern/replacement/flags" ...
 # is run as: sed -e "s/pattern/replacement/flags" -e ...
 sub() {
-    args=("-e" "$1")
-    while shift
+    local args=()
+
+    for s in "$@"
     do
-        args+=("-e")
-        args+=("$1")
-        shift
+        args+=("-e" "$s")
     done
+
     sed "${args[@]}"
 }
 
-::() {
+g() {
     grep "$@"
+}
+
+gh() {
+    grep -e ^ -e "$@"
 }

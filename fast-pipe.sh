@@ -24,7 +24,7 @@ command_not_found_handle() {
 
     cmd="$1"
 
-    if [[ "$cmd" =~ ^+?[0-9]:$ ]]
+    if [[ "$cmd" =~ ^\+?[0-9]:$ ]]
     then
         shift
         tail -n "${cmd/:/}" "$@"
@@ -32,6 +32,11 @@ command_not_found_handle() {
     then
         shift
         head -n "${cmd/:/}" "$@"
+    elif [[ "$cmd" =~ ^\\ ]]
+    then
+        one="${1/\\/}"
+        shift
+        grep "$one" "$@"
     else
         old_command_not_found_handle "$@"
         return $?

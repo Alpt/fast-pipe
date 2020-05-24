@@ -11,9 +11,9 @@ For example, `15:` is the same of `tail -n 15`.
 
 `:number ...` is `head -n number ...`  
 
-Finally, like `g:` for grep, there is `s:` for sed. Examples:
+Finally, like `g:` for grep, there is `s:` for sed. Examples:  
 ```
-g:root /etc/passwd | s:root:foo:g s:/root:/foo/home:
+g:root /etc/passwd | s:root:foo:g s%/foo%:/foo/home%
 ```
 The same rules applies, so `s@ s. s, s\ ...` are all alternatives to `s:`, but the non-word character must be used as sed delimiter, for example, `s%root%foo%g /etc/passwd | head`
 

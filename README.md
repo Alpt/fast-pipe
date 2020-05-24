@@ -1,3 +1,12 @@
+Usage
+=====
+
+`g:RegExp1 arg1 arg2` ... is the same of `grep -e RegExp1 -e RegExp2 ... arg1 arg2 ....`.
+The semicolon character : can actually be any non-word character, so `g% g@ g,` are all valid alternatives to `g:`. Only, `g/` is not valid, because bash treats / specially.  
+For example, `g%:[0-1]: -C 2 g%$USER /etc/passwd -n /etc/group` is the same of `grep -e :[0-1]: -C 2 -e $USER /etc/passwd -n /etc/group`  
+
+`number:` is the same of `tail -n number`. For example, `15:` is the same of `tail -n 15`.
+
 Examples
 ========
 

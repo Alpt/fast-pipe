@@ -1,5 +1,12 @@
 #!/bin/bash
 
+SED_DELIM="!"
+set +H # disable history expansion: the thing that substitutes ! with words/commands from the history.
+# See HISTORY EXPANSION in man bash. 
+# If you like history expansion, then you have to use a different character
+# for SED_DELIM, for example, try SED_DELIM="%"
+
+
 if declare -f command_not_found_handle > /dev/null 
 then
     # save command_not_found_handle in old_command_not_found_handle
@@ -17,6 +24,8 @@ command_not_found_handle() {
  
     local cmd="$1"
 
+    local sed_regexp="^s$SED_DELIM"
+
     if [[ "$cmd" =~ ^\+?[0-9]:$ ]]
     then
         # tail
@@ -27,7 +36,7 @@ command_not_found_handle() {
         # head
         shift
         head -n "${cmd/:/}" "$@"
-    elif [[ "$cmd" =~ ^s! ]]
+    elif [[ "$cmd" =~ ^s ]]
     then
         # sed 
         sub "$@"

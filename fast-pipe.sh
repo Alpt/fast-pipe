@@ -77,7 +77,7 @@ multi_grep() {
         fi
     done
 
-    grep "${arg[@]}"
+    grep "${args[@]}"
 
 }
 

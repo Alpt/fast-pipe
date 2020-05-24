@@ -27,13 +27,32 @@ command_not_found_handle() {
     if [[ "$cmd" =~ ^\+?[0-9]+:$ ]]
     then
         # tail
+
+        local one="${cmd/:/}"
+
+        if [ "$one" = "0" ]
+        then
+            one=10
+        fi
+
         shift
-        tail -n "${cmd/:/}" "$@"
+
+        tail -n "$one" "$@"
+
     elif [[ "$cmd" =~ ^:-?[0-9]+$ ]]
     then
         # head
+
+        local one="${cmd/:/}"
+
+        if [ "$one" = "0" ]
+        then
+            one=10
+        fi
+
         shift
-        head -n "${cmd/:/}" "$@"
+
+        head -n "$one" "$@"
     else
         if [[ "$cmd" =~ $sed_regexp ]]
         then

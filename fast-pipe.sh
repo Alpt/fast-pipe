@@ -57,7 +57,7 @@ command_not_found_handle() {
         if [[ "$cmd" =~ $sed_regexp ]]
         then
             # sed 
-            sub "$@"
+            multi_sed "$@"
         elif [[ "$cmd" =~ $grep_regexp ]]
         then
             # grep 
@@ -73,10 +73,7 @@ command_not_found_handle() {
 
 }
 
-# Substitute with sed.
-# sub "s/pattern/replacement/flags" "s/pattern/replacement/flags" "s/pattern/replacement/flags" ...
-# is run as: sed -e "s/pattern/replacement/flags" -e ...
-sub() {
+multi_sed() {
     local arg
     local args=()
     local notWord="$__fastPipe_notWord"

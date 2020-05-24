@@ -79,7 +79,7 @@ multi_grep() {
     do
         # if arg is of the for gS...S where S is not a "word" character, then consider arg as a grep expression
         # (after removing gS and S from arg)
-        if [[ "$arg" =~ $regexp]] && [ ${arg: -1} = ${arg:1:1} ]
+        if [[ "$arg" =~ $regexp ]] && [ ${arg: -1} = ${arg:1:1} ]
         then 
             arg="$(echo "$arg" | sed -e 's#^g.##' -e 's#.$##')"
             args+=("-e" "$arg")

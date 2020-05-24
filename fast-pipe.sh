@@ -36,7 +36,7 @@ command_not_found_handle() {
         # head
         shift
         head -n "${cmd/:/}" "$@"
-    elif [[ "$cmd" =~ ^s ]]
+    elif [[ "$cmd" =~ $sed_regexp ]]
     then
         # sed 
         sub "$@"

@@ -12,8 +12,8 @@ else
 fi
 
 __fastPipe_notWord="[^[:alnum:]_]"
-__fastPipe_grep_regexp="^g$notWord.*$notWord$"
-__fastPipe_sed_regexp="^s$notWord.*$notWord$"
+__fastPipe_grep_regexp="^g$notWord"
+__fastPipe_sed_regexp="^s$notWord"
 
 command_not_found_handle() {
 
@@ -35,11 +35,11 @@ command_not_found_handle() {
         shift
         head -n "${cmd/:/}" "$@"
     else
-        if [[ "$cmd" =~ $sed_regexp ]] && [ ${cmd: -1} = ${cmd:1:1} ]
+        if [[ "$cmd" =~ $sed_regexp ]]
         then
             # sed 
             sub "$@"
-        elif [[ "$cmd" =~ $grep_regexp ]] && [ ${cmd: -1} = ${cmd:1:1} ]
+        elif [[ "$cmd" =~ $grep_regexp ]]
         then
             # grep 
             multi_grep "$@" 
@@ -77,11 +77,9 @@ multi_grep() {
 
     for arg in "$@"
     do
-        # if arg is of the for gS...S where S is not a "word" character, then consider arg as a grep expression
-        # (after removing gS and S from arg)
-        if [[ "$arg" =~ $regexp ]] && [ ${arg: -1} = ${arg:1:1} ]
-        then 
-            arg="$(echo "$arg" | sed -e 's#^g.##' -e 's#.$##')"
+        if [[ "$arg" =~ $regexp ]]
+        then
+            arg="${arg:2}"
             args+=("-e" "$arg")
         else
             args+=("$arg")

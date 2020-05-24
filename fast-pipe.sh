@@ -77,12 +77,19 @@ command_not_found_handle() {
 # sub "s/pattern/replacement/flags" "s/pattern/replacement/flags" "s/pattern/replacement/flags" ...
 # is run as: sed -e "s/pattern/replacement/flags" -e ...
 sub() {
+    local arg
     local args=()
-    local s
+    local notWord="$__fastPipe_notWord"
+    local regexp="$__fastPipe_sed_regexp"
 
-    for s in "$@"
+    for arg in "$@"
     do
-        args+=("-e" "$s")
+        if [[ "$arg" =~ $regexp ]]
+        then
+            args+=("-e" "$arg")
+        else
+            args+=("$arg")
+        fi
     done
 
     sed "${args[@]}"

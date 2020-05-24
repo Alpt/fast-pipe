@@ -1,12 +1,5 @@
 #!/bin/bash
 
-SED_DELIM="!"
-set +H # disable history expansion: the thing that substitutes ! with words/commands from the history.
-# See HISTORY EXPANSION in man bash. 
-# If you like history expansion, then you have to use a different character
-# for SED_DELIM, for example, try SED_DELIM="%"
-
-
 if declare -f command_not_found_handle > /dev/null 
 then
     # save command_not_found_handle in old_command_not_found_handle
@@ -18,13 +11,18 @@ else
     }
 fi
 
+__fastPipe_notWord="[^[:alnum:]_]"
+__fastPipe_grep_regexp="^g$notWord.*$notWord$"
+__fastPipe_sed_regexp="^s$notWord.*$notWord$"
+
 command_not_found_handle() {
 
     # lots of code taken from https://www.linuxjournal.com/content/bash-command-not-found
  
     local cmd="$1"
-
-    local sed_regexp="^s$SED_DELIM"
+    local notWord="$__fastPipe_notWord"
+    local grep_regexp="$__fastPipe_grep_regexp"
+    local sed_regexp="$__fastPipe_sed_regexp"
 
     if [[ "$cmd" =~ ^\+?[0-9]:$ ]]
     then
@@ -36,18 +34,20 @@ command_not_found_handle() {
         # head
         shift
         head -n "${cmd/:/}" "$@"
-    elif [[ "$cmd" =~ $sed_regexp ]]
-    then
-        # sed 
-        sub "$@"
-    elif [[ "$cmd" =~ ^\\.*\\$ ]]
-    then
-        # grep 
-        multi_grep "$@" 
     else
-        # command not found
-        old_command_not_found_handle "$@"
-        return $?
+        if [[ "$cmd" =~ $sed_regexp ]] && [ ${cmd: -1} = ${cmd:1:1} ]
+        then
+            # sed 
+            sub "$@"
+        elif [[ "$cmd" =~ $grep_regexp ]] && [ ${cmd: -1} = ${cmd:1:1} ]
+        then
+            # grep 
+            multi_grep "$@" 
+        else
+            # command not found
+            old_command_not_found_handle "$@"
+            return $?
+        fi
     fi
         
     return 127
@@ -69,17 +69,19 @@ sub() {
     sed "${args[@]}"
 }
 
-
 multi_grep() {
     local arg
     local args=()
+    local notWord="$__fastPipe_notWord"
+    local regexp="$__fastPipe_grep_regexp"
 
     for arg in "$@"
     do
-        if [[ "$arg" =~ ^\\.*\\$ ]]
-        then
-            # remove leading and trailing \
-            arg="$(echo "$arg" | sed -e 's/^\\\|\\$//g')"
+        # if arg is of the for gS...S where S is not a "word" character, then consider arg as a grep expression
+        # (after removing gS and S from arg)
+        if [[ "$arg" =~ $regexp]] && [ ${arg: -1} = ${arg:1:1} ]
+        then 
+            arg="$(echo "$arg" | sed -e 's#^g.##' -e 's#.$##')"
             args+=("-e" "$arg")
         else
             args+=("$arg")

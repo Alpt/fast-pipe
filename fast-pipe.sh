@@ -24,12 +24,12 @@ command_not_found_handle() {
     local grep_regexp="$__fastPipe_grep_regexp"
     local sed_regexp="$__fastPipe_sed_regexp"
 
-    if [[ "$cmd" =~ ^\+?[0-9]:$ ]]
+    if [[ "$cmd" =~ ^\+?[0-9]+:$ ]]
     then
         # tail
         shift
         tail -n "${cmd/:/}" "$@"
-    elif [[ "$cmd" =~ ^:-?[0-9]$ ]]
+    elif [[ "$cmd" =~ ^:-?[0-9]+$ ]]
     then
         # head
         shift

@@ -15,25 +15,28 @@ command_not_found_handle() {
 
     # lots of code taken from https://www.linuxjournal.com/content/bash-command-not-found
  
-    cmd="$1"
+    local cmd="$1"
 
     if [[ "$cmd" =~ ^\+?[0-9]:$ ]]
     then
+        # tail
         shift
         tail -n "${cmd/:/}" "$@"
     elif [[ "$cmd" =~ ^:-?[0-9]$ ]]
     then
+        # head
         shift
         head -n "${cmd/:/}" "$@"
-    elif [[ "$cmd" =~ ^s/ ]]
+    elif [[ "$cmd" =~ ^s! ]]
     then
+        # sed 
         sub "$@"
-    elif [[ "$cmd" =~ ^\\ ]]
+    elif [[ "$cmd" =~ ^\\.*\\$ ]]
     then
-        one="${1/\\/}"
-        shift
-        grep "$one" "$@"
+        # grep 
+        multi_grep "$@" 
     else
+        # command not found
         old_command_not_found_handle "$@"
         return $?
     fi
@@ -47,6 +50,7 @@ command_not_found_handle() {
 # is run as: sed -e "s/pattern/replacement/flags" -e ...
 sub() {
     local args=()
+    local s
 
     for s in "$@"
     do
@@ -56,10 +60,33 @@ sub() {
     sed "${args[@]}"
 }
 
+
+multi_grep() {
+    local arg
+    local args=()
+
+    for arg in "$@"
+    do
+        if [[ "$arg" =~ ^\\.*\\$ ]]
+        then
+            # remove leading and trailing \
+            arg="$(echo "$arg" | sed -e 's/^\\\|\\$//g')"
+            args+=("-e" "$arg")
+        else
+            args+=("$arg")
+        fi
+    done
+
+    grep "${arg[@]}"
+
+}
+
+# short alias for grep
 g() {
     grep "$@"
 }
 
+# short alias for highlighting text with grep 
 gh() {
     grep -e ^ -e "$@"
 }

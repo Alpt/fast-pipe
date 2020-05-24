@@ -25,6 +25,9 @@ command_not_found_handle() {
     then
         shift
         head -n "${cmd/:/}" "$@"
+    elif [[ "$cmd" =~ ^s/ ]]
+    then
+        sub "$@"
     elif [[ "$cmd" =~ ^\\ ]]
     then
         one="${1/\\/}"

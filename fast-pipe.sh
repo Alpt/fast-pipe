@@ -12,7 +12,7 @@ else
 fi
 
 __fastPipe_notWord="[^[:alnum:]_]"
-__fastPipe_grep_regexp="^g$notWord"
+__fastPipe_grep_regexp="^-$"
 __fastPipe_sed_regexp="^s$notWord"
 
 command_not_found_handle() {
@@ -54,14 +54,9 @@ command_not_found_handle() {
 
         head -n "$one" "$@"
     else
-        if [[ "$cmd" =~ $sed_regexp ]]
+        if [[ "$cmd" =~ $sed_regexp || "$cmd" =~ $grep_regexp ]]
         then
-            # sed 
-            multi_sed "$@"
-        elif [[ "$cmd" =~ $grep_regexp ]]
-        then
-            # grep 
-            multi_grep "$@" 
+            led "$@"
         else
             # command not found
             old_command_not_found_handle "$@"
@@ -92,24 +87,63 @@ multi_sed() {
     sed "${args[@]}"
 }
 
-multi_grep() {
+# line editor
+#   - grep
+#   s/ sed
+#   1: tail
+#   :1 head
+led() {
     local arg
     local args=()
-    local notWord="$__fastPipe_notWord"
-    local regexp="$__fastPipe_grep_regexp"
+
+    local firstCmd=1
+    local curCmd=""
 
     for arg in "$@"
     do
-        if [[ "$arg" =~ $regexp ]]
+        if [ "$arg" = "-" ]
         then
-            arg="${arg:2}"
+
+            if [ "$curCmd" != "grep" ]
+            then
+                curCmd="grep"
+                if !((firstCmd))
+                then
+                    args+=("|")
+                fi
+                firstCmd=0
+                args+=("grep")
+            fi
+
+            args+=("-e")
+
+            continue
+
+        elif [[ "$arg" =~ s$notWord ]]
+        then
+            
+            if [ "$curCmd" != "sed" ]
+            then
+                curCmd="sed"
+                if !((firstCmd))
+                then
+                    args+=("|")
+                fi
+                firstCmd=0
+                args+=("sed")
+            fi
+
             args+=("-e" "$arg")
-        else
-            args+=("$arg")
+
+            continue
+
         fi
+
+        args+=("$arg")
+
     done
 
-    grep "${args[@]}"
+    eval "${args[@]}"
 
 }
 

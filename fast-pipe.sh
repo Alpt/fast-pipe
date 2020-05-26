@@ -14,6 +14,8 @@ fi
 __fastPipe_notWord="[^[:alnum:]_]"
 __fastPipe_grep_regexp="^-$"
 __fastPipe_sed_regexp="^s$notWord"
+__fastPipe_tail_regexp="^\+?[0-9]+:$"
+__fastPipe_head_regexp="^:-?[0-9]+$"
 
 command_not_found_handle() {
 
@@ -24,47 +26,15 @@ command_not_found_handle() {
     local grep_regexp="$__fastPipe_grep_regexp"
     local sed_regexp="$__fastPipe_sed_regexp"
 
-    if [[ "$cmd" =~ ^\+?[0-9]+:$ ]]
+
+    if [[ "$cmd" =~ $sed_regexp || "$cmd" =~ $grep_regexp || "$cmd" =~ $__fastPipe_tail_regexp || "$cmd" =~ $__fastPipe_head_regexp ]]
     then
-        # tail
-
-        local one="${cmd/:/}"
-
-        if [ "$one" = "0" ]
-        then
-            one=10
-        fi
-
-        shift
-
-        tail -n "$one" "$@"
-
-    elif [[ "$cmd" =~ ^:-?[0-9]+$ ]]
-    then
-        # head
-
-        local one="${cmd/:/}"
-
-        if [ "$one" = "0" ]
-        then
-            one=10
-        fi
-
-        shift
-
-        head -n "$one" "$@"
+        led "$@"
     else
-        if [[ "$cmd" =~ $sed_regexp || "$cmd" =~ $grep_regexp ]]
-        then
-            led "$@"
-        else
-            # command not found
-            old_command_not_found_handle "$@"
-            return $?
-        fi
+        # command not found
+        old_command_not_found_handle "$@"
+        return $?
     fi
-        
-    return 127
 
 }
 
@@ -137,9 +107,49 @@ led() {
 
             continue
 
-        fi
+        elif [[ "$arg" =~ $__fastPipe_tail_regexp ]]
+        then
+            # tail
 
-        args+=("$arg")
+            arg="${arg/:/}"
+
+            if [ "$arg" = "0" ]
+            then
+                arg=10
+            fi
+
+            if !((firstCmd))
+            then
+                args+=("|")
+            fi
+            firstCmd=0
+
+            args+=("tail" "-n" "$arg")
+
+        elif [[ "$cmd" =~ $__fastPipe_head_regexp ]]
+        then
+            # tail
+
+            arg="${arg/:/}"
+
+            if [ "$arg" = "0" ]
+            then
+                arg=10
+            fi
+
+            if !((firstCmd))
+            then
+                args+=("|")
+            fi
+            firstCmd=0
+
+            args+=("head" "-n" "$arg")
+
+        else
+
+            args+=("$arg")
+
+        fi
 
     done
 

@@ -201,6 +201,11 @@ led() {
         args+=("$sedExpression$sedDelim")
     fi
 
+    if [ "$FASTPIPE_DEBUG" ]
+    then
+        echo eval "${args[@]}"
+    fi
+
     eval "${args[@]}"
 
 }

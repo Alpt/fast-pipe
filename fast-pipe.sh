@@ -69,8 +69,51 @@ led() {
     local firstCmd=1
     local curCmd=""
 
+    local sedDelim=""
+    local sedToken=0
+    local sedExpression=""
+
     for arg in "$@"
     do
+
+        if [ "$curCmd" = "sed" ] && (( 1 <= sedToken && sedToken <= 2))
+        then
+
+            sedExpression="$sedExpression${sedDelim}$arg"
+            ((sedToken++))
+
+            continue
+
+        elif [ "$curCmd" = "sed" ] && ((sedToken == 3)) 
+        then
+
+            sedToken=0
+
+            if [ "${arg:0:1}" = "$sedDelim" ]
+            then
+
+                arg="${arg:1}"
+                sedExpression="$sedExpression${sedDelim}$arg"
+
+                args+=("$sedExpression")
+
+                sedExpression=""
+                sedToken=0
+                
+                continue
+
+            else
+
+                args+=("$sedExpression$sedDelim")
+
+                sedExpression=""
+                sedToken=0
+
+            fi
+
+
+        fi
+
         if [ "$arg" = "-" ]
         then
 
@@ -87,8 +130,6 @@ led() {
 
             args+=("-e")
 
-            continue
-
         elif [[ "$arg" =~ s$notWord ]]
         then
             
@@ -103,9 +144,11 @@ led() {
                 args+=("sed")
             fi
 
-            args+=("-e" "$arg")
+            sedDelim="${arg:1:1}"
+            sedToken=1
+            sedExpression="s"
 
-            continue
+            args+=("-e")
 
         elif [[ "$arg" =~ $__fastPipe_tail_regexp ]]
         then
@@ -152,6 +195,11 @@ led() {
         fi
 
     done
+
+    if [ "$curCmd" = "sed" ] && ((sedToken == 3)) 
+    then
+        args+=("$sedExpression$sedDelim")
+    fi
 
     eval "${args[@]}"
 

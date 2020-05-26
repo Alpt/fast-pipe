@@ -126,9 +126,9 @@ led() {
 
             args+=("tail" "-n" "$arg")
 
-        elif [[ "$cmd" =~ $__fastPipe_head_regexp ]]
+        elif [[ "$arg" =~ $__fastPipe_head_regexp ]]
         then
-            # tail
+            # head
 
             arg="${arg/:/}"
 

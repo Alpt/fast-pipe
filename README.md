@@ -13,7 +13,7 @@ is the same of `grep -e regexp arg arg ... -e regexp arg arg ....`
 
 Pipe is already implicit:
 
-`- home /etc/passwd :-3 :1`  
+`- home /etc/passwd :-3 1:`  
 
 is the same of  
 
@@ -31,7 +31,7 @@ is the same of
 grep -e root /etc/passwd | sed -e s:root:foo:g -e s%/foo%/foo/home%
 ```  
 
-The non-word character after `s` can actually be any non-word character, so `s: s- s/ s% s@ s-` are all valid. Only, `s/` is not valid if used at the start, not in a pipe, because bash treats / specially.  
+The non-word character after `s` can actually be any non-word character, so `s: s- s/ s% s@ s- ...` are all valid. Only, `s/` is not valid if used at the start, not in a pipe, because bash treats / specially.  
 
 Example
 =======

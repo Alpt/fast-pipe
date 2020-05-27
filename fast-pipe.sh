@@ -13,7 +13,7 @@ fi
 
 __fastPipe_notWord="[^[:alnum:]_]"
 __fastPipe_grep_regexp="^-$"
-__fastPipe_sed_regexp="^s$notWord"
+__fastPipe_sed_regexp="^s$__fastPipe_notWord"
 __fastPipe_tail_regexp="^\+?[0-9]+:$"
 __fastPipe_head_regexp="^:-?[0-9]+$"
 

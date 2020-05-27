@@ -75,6 +75,6 @@ echo source ~/.fast-pipe.sh >> ~/.bashrc
 <pre>
 $ export FASTPIPE_DEBUG=1
 $ - root /etc/passwd :1
-eval grep -e 'root' '/etc/passwd' | head -n '1'
+grep -e 'root' '/etc/passwd' | head -n '1'
 root:x:0:0:root:/root:/bin/bash
 </pre></p>

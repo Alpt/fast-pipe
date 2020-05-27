@@ -63,7 +63,7 @@ is the same of `grep -e regexp arg arg ... -e regexp arg arg ....`
 
 `:number ...` means `head -n number ...`  
 
-Pipe is already implicit:
+Piping is already implicit.
 
 `- home /etc/passwd :-3 1:`  
 

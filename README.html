@@ -1,0 +1,61 @@
+<h1>Motivation</h1>
+<p>Typing grep, sed, tail, head pipes as fast as possible.  </p>
+<p>I got a little tired of writing | grep .... | sed ...<br />
+I wanted something less tedious and faster.<br />
+This is the result of this nice whim.  </p>
+<h1>Example</h1>
+<pre>
+Pseudo code:
+
+  grep users with 'nologin' as login shell | substitute the string 'nologin' with 'nopelogin' |
+      grep uid with at most 3 digits | take only the first three lines
+
+Normal bash:
+
+  grep -e nologin /etc/passwd | sed -e s/nologin/nopelogin/ | grep '^[^:]*:[^:]*:[^:]\{,3\}:' | head -n 3
+
+Fastpipe bash:
+
+  - nologin /etc/passwd s/ nologin nopelogin - '^[^:]*:[^:]*:[^:]\{,3\}:' :3
+
+Output:
+
+  daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nopelogin
+  bin:x:2:2:bin:/bin:/usr/sbin/nopelogin
+  sys:x:3:3:sys:/dev:/usr/sbin/nopelogin
+
+</pre>
+
+<pre>
+
+Pseudo code:
+
+  get the html of www.wikipedia.org | grep src= (for looking for lines with src="") |
+    take the url of the src attribute and insert www.wikipedia.org/ at the beginning of the url |
+    grep images of type png
+
+Fastpipe code:
+
+  curl https://www.wikipedia.org 2> /dev/null | - src= s: '.*src="\([^"]*\)".*' '\1' s: ^ www.wikipedia.org/ - '\.png$' -i
+
+Output:
+
+  www.wikipedia.org/portal/wikipedia.org/assets/img/Wikipedia-logo-v2.png
+
+</pre>
+
+<h1>Usage</h1>
+<p><code>- regexp arg arg ... - regexp arg arg ...</code>  </p>
+<p>is the same of <code>grep -e regexp arg arg ... -e regexp arg arg ....</code>  </p>
+<p><code>number: arg1 arg2 ...</code>  means <code>tail -n number arg1 arg2 ...</code></p>
+<p><code>0:</code> is an alias of <code>10:</code>  </p>
+<p><code>:number ...</code> means <code>head -n number ...</code>  </p>
+<p>Pipe is already implicit:</p>
+<p><code>- home /etc/passwd :-3 1:</code>  </p>
+<p>is the same of  </p>
+<p><code>grep home /etc/passwd | head -n -3 | tail -n 1</code>  </p>
+<p>Finally, there is sed. Example:  </p>
+<p><code>- root /etc/passwd  s: root foo :g  s% /foo /foo/home</code>  </p>
+<p>is the same of  </p>
+<p><code>grep -e root /etc/passwd | sed -e s:root:foo:g -e s%/foo%/foo/home%</code>  </p>
+<p>The non-word character after <code>s</code> can actually be any non-word character, so <code>s: s- s/ s% s@ s- ...</code> are all valid. Only, <code>s/</code> is not valid if used at the start, not in a pipe, because bash treats / specially.  </p>

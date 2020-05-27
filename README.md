@@ -50,6 +50,18 @@ Output:
 
 </pre>
 
+Installation
+============
+
+Either copy and past the following in your terminal:
+
+<pre>
+curl https://raw.githubusercontent.com/Alpt/fast-pipe/master/fast-pipe.sh > ~/.fast-pipe.sh  
+echo source ~/.fast-pipe.sh >> ~/.bashrc
+</pre>
+
+Or copy fast-pipe.sh /somewhere, then add `source /somewhere/fast-pipe.sh` in your .bashrc. 
+
 Usage
 =====
 

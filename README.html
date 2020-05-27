@@ -44,13 +44,21 @@ Output:
 
 </pre>
 
+<h1>Installation</h1>
+<p>Either copy and past the following in your terminal:</p>
+<pre>
+curl https://raw.githubusercontent.com/Alpt/fast-pipe/master/fast-pipe.sh > ~/.fast-pipe.sh  
+echo source ~/.fast-pipe.sh >> ~/.bashrc
+</pre>
+
+<p>Or copy fast-pipe.sh /somewhere, then add <code>source /somewhere/fast-pipe.sh</code> in your .bashrc. </p>
 <h1>Usage</h1>
 <p><code>- regexp arg arg ... - regexp arg arg ...</code>  </p>
 <p>is the same of <code>grep -e regexp arg arg ... -e regexp arg arg ....</code>  </p>
 <p><code>number: arg1 arg2 ...</code>  means <code>tail -n number arg1 arg2 ...</code></p>
 <p><code>0:</code> is an alias of <code>10:</code>  </p>
 <p><code>:number ...</code> means <code>head -n number ...</code>  </p>
-<p>Pipe is already implicit:</p>
+<p>Piping is already implicit.</p>
 <p><code>- home /etc/passwd :-3 1:</code>  </p>
 <p>is the same of  </p>
 <p><code>grep home /etc/passwd | head -n -3 | tail -n 1</code>  </p>

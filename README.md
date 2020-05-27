@@ -1,7 +1,9 @@
 Usage
 =====
 
-`- regexp arg arg ... - regexp arg arg ...` ... is the same of `grep -e regexp arg arg ... -e regexp arg arg ....`.  
+`- regexp arg arg ... - regexp arg arg ...`  
+
+is the same of `grep -e regexp arg arg ... -e regexp arg arg ....`  
 
 `number: arg1 arg2 ...`  is the same of `tail -n number arg1 arg2 ...`.  
 For example, `15:` is the same of `tail -n 15`.  

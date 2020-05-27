@@ -38,31 +38,14 @@ command_not_found_handle() {
 
 }
 
-multi_sed() {
-    local arg
-    local args=()
-    local notWord="$__fastPipe_notWord"
-    local regexp="$__fastPipe_sed_regexp"
-
-    for arg in "$@"
-    do
-        if [[ "$arg" =~ $regexp ]]
-        then
-            args+=("-e" "$arg")
-        else
-            args+=("$arg")
-        fi
-    done
-
-    sed "${args[@]}"
-}
-
 # line editor
 #   - grep
 #   s/ sed
 #   1: tail
 #   :1 head
 led() {
+    local notWord="$__fastPipe_notWord"
+
     local arg
     local args=()
 

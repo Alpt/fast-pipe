@@ -95,7 +95,7 @@ led() {
                 arg="${arg:1}"
                 sedExpression="$sedExpression${sedDelim}$arg"
 
-                args+=("$sedExpression")
+                args+=("'$sedExpression'")
 
                 sedExpression=""
                 sedToken=0
@@ -104,7 +104,7 @@ led() {
 
             else
 
-                args+=("$sedExpression$sedDelim")
+                args+=("'$sedExpression$sedDelim'")
 
                 sedExpression=""
                 sedToken=0
@@ -167,7 +167,7 @@ led() {
             fi
             firstCmd=0
 
-            args+=("tail" "-n" "$arg")
+            args+=("tail" "-n" "'$arg'")
 
         elif [[ "$arg" =~ $__fastPipe_head_regexp ]]
         then
@@ -186,11 +186,11 @@ led() {
             fi
             firstCmd=0
 
-            args+=("head" "-n" "$arg")
+            args+=("head" "-n" "'$arg'")
 
         else
 
-            args+=("$arg")
+            args+=("'$arg'")
 
         fi
 
@@ -198,7 +198,7 @@ led() {
 
     if [ "$curCmd" = "sed" ] && ((sedToken == 3)) 
     then
-        args+=("$sedExpression$sedDelim")
+        args+=("'$sedExpression$sedDelim'")
     fi
 
     if [ "$FASTPIPE_DEBUG" ]

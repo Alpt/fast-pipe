@@ -110,11 +110,11 @@ grep -e root /etc/passwd | sed -e s:root:foo:g -e s%/foo%/foo/home%
 The non-word character after `s` can actually be any non-word character, so `s: s- s/ s% s@ s- ...` are all valid. Only, `s/` is not valid if used at the start, not in a pipe, because bash treats / specially.  
 
 
-By exporting FASTPIPE_DEBUG=1, fast-pipe will print the actual final command it executes. Example:
+By exporting FASTPIPE\_DEBUG=1, fast-pipe will print the actual final command it executes. Example:
 <pre>
-# export FASTPIPE_DEBUG=1
+$ export FASTPIPE\_DEBUG=1
 $ - root /etc/passwd :1
-eval grep -e 'root' '/etc/passwd' | head -n '1'
+grep -e 'root' '/etc/passwd' | head -n '1'
 root:x:0:0:root:/root:/bin/bash
 </pre>
 

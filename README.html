@@ -72,9 +72,9 @@ echo source ~/.fast-pipe.sh >> ~/.bashrc
 <p><code>grep -e root /etc/passwd | sed -e s:root:foo:g -e s%/foo%/foo/home%</code>  </p>
 <p>The non-word character after <code>s</code> can actually be any non-word character, so <code>s: s- s/ s% s@ s- ...</code> are all valid. Only, <code>s/</code> is not valid if used at the start, not in a pipe, because bash treats / specially.  </p>
 <p>By exporting FASTPIPE_DEBUG=1, fast-pipe will print the actual final command it executes. Example:
-<pre></p>
-<h1>export FASTPIPE_DEBUG=1</h1>
-<p>$ - root /etc/passwd :1
+<pre>
+$ export FASTPIPE_DEBUG=1
+$ - root /etc/passwd :1
 eval grep -e 'root' '/etc/passwd' | head -n '1'
 root:x:0:0:root:/root:/bin/bash
 </pre></p>

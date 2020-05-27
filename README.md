@@ -9,7 +9,7 @@ For example, `15:` is the same of `tail -n 15`.
 
 `:number ...` is `head -n number ...`  
 
-Pipe in already implicit.  
+Pipe is already implicit.  
 `- home /etc/passwd :-3 :1`  
 is the same of  
 `grep home /etc/passwd | head -n -3 | tail -n 1`  

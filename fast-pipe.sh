@@ -29,7 +29,7 @@ command_not_found_handle() {
 
     if [[ "$cmd" =~ $sed_regexp || "$cmd" =~ $grep_regexp || "$cmd" =~ $__fastPipe_tail_regexp || "$cmd" =~ $__fastPipe_head_regexp ]]
     then
-        led "$@"
+        __fastpipe_led "$@"
     else
         # command not found
         old_command_not_found_handle "$@"
@@ -43,7 +43,7 @@ command_not_found_handle() {
 #   s/ sed
 #   1: tail
 #   :1 head
-led() {
+__fastpipe_led() {
     local notWord="$__fastPipe_notWord"
 
     local arg
@@ -191,14 +191,4 @@ led() {
 
     eval "${args[@]}"
 
-}
-
-# short alias for grep
-g() {
-    grep "$@"
-}
-
-# short alias for highlighting text with grep 
-gh() {
-    grep -e ^ -e "$@"
 }

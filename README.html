@@ -1,8 +1,12 @@
 <h1>Motivation</h1>
-<p>Typing grep, sed, tail, head pipes as fast as possible.  </p>
+<p>Typing grep, sed, head/tail pipes as fast as possible.  </p>
 <p>I got a little tired of writing | grep .... | sed ...<br />
 I wanted something less tedious and faster.<br />
-This is the result of this nice whim.  </p>
+Fast-pipe is the result of this whim. For example, with fast-pipe in bash</p>
+<p><code>+4: /etc/passwd - nologin s/ nologin nopelogin - '^[^:]*:[^:]*:[^:]\{,3\}:' :3</code></p>
+<p>is executed as  </p>
+<p><code>tail -n +4 /etc/passwd | grep nologin | sed -e s/nologin/nopelogin/ | grep '^[^:]*:[^:]*:[^:]\{,3\}:' | head -n 3</code></p>
+<p>Fast-pipe should be the quickest way of building pipes with grep, sed, tail.</p>
 <h1>Example</h1>
 <pre>
 Pseudo code:
@@ -67,3 +71,10 @@ echo source ~/.fast-pipe.sh >> ~/.bashrc
 <p>is the same of  </p>
 <p><code>grep -e root /etc/passwd | sed -e s:root:foo:g -e s%/foo%/foo/home%</code>  </p>
 <p>The non-word character after <code>s</code> can actually be any non-word character, so <code>s: s- s/ s% s@ s- ...</code> are all valid. Only, <code>s/</code> is not valid if used at the start, not in a pipe, because bash treats / specially.  </p>
+<p>By exporting FASTPIPE_DEBUG=1, fast-pipe will print the actual final command it executes. Example:
+<pre></p>
+<h1>export FASTPIPE_DEBUG=1</h1>
+<p>$ - root /etc/passwd :1
+eval grep -e 'root' '/etc/passwd' | head -n '1'
+root:x:0:0:root:/root:/bin/bash
+</pre></p>

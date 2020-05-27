@@ -1,11 +1,23 @@
 Motivation
 ==========
 
-Typing grep, sed, tail, head pipes as fast as possible.  
+Typing grep, sed, head/tail pipes as fast as possible.  
 
 I got a little tired of writing | grep .... | sed ...  
 I wanted something less tedious and faster.  
-This is the result of this nice whim.  
+Fast-pipe is the result of this whim. For example, with fast-pipe in bash
+
+```
++4: /etc/passwd - nologin s/ nologin nopelogin - '^[^:]*:[^:]*:[^:]\{,3\}:' :3
+```
+
+is executed as  
+
+```
+tail -n +4 /etc/passwd | grep nologin | sed -e s/nologin/nopelogin/ | grep '^[^:]*:[^:]*:[^:]\{,3\}:' | head -n 3
+```
+
+Fast-pipe should be the quickest way of building pipes with grep, sed, tail.
 
 Example
 =======
@@ -97,4 +109,12 @@ grep -e root /etc/passwd | sed -e s:root:foo:g -e s%/foo%/foo/home%
 
 The non-word character after `s` can actually be any non-word character, so `s: s- s/ s% s@ s- ...` are all valid. Only, `s/` is not valid if used at the start, not in a pipe, because bash treats / specially.  
 
+
+By exporting FASTPIPE_DEBUG=1, fast-pipe will print the actual final command it executes. Example:
+<pre>
+# export FASTPIPE_DEBUG=1
+$ - root /etc/passwd :1
+eval grep -e 'root' '/etc/passwd' | head -n '1'
+root:x:0:0:root:/root:/bin/bash
+</pre>
 

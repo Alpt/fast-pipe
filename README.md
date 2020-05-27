@@ -1,9 +1,7 @@
 Usage
 =====
 
-`g:RegExp1 arg1 arg2` ... is the same of `grep -e RegExp1 -e RegExp2 ... arg1 arg2 ....`.  
-The semicolon character : can actually be any non-word character, so `g% g@ g,` are all valid alternatives to `g:`. Only, `g/` is not valid, because bash treats / specially.  
-For example, `g%:[0-1]: -C 2 g%$USER /etc/passwd -n /etc/group` is the same of `grep -e :[0-1]: -C 2 -e $USER /etc/passwd -n /etc/group`  
+`- regexp arg arg ... - regexp arg arg ...` ... is the same of `grep -e regexp arg arg ... -e regexp arg arg ....`.  
 
 `number: arg1 arg2 ...`  is the same of `tail -n number arg1 arg2 ...`.  
 For example, `15:` is the same of `tail -n 15`.  
@@ -11,11 +9,21 @@ For example, `15:` is the same of `tail -n 15`.
 
 `:number ...` is `head -n number ...`  
 
-Finally, like `g:` for grep, there is `s:` for sed. Examples:  
+Pipe in already implicit.  
+`- home /etc/passwd :-3 :1`  
+is the same of  
+`grep home /etc/passwd | head -n -3 | tail -n 1`  
+
+Then there is sed. Example:  
 ```
-g:root /etc/passwd | s:root:foo:g s%/foo%:/foo/home%
+- root /etc/passwd  s: root foo :g  s% /foo /foo/home
 ```  
-The same rules applies, so `s@ s. s, s\ ...` are all alternatives to `s:`, but the non-word character must be used as sed delimiter, for example, `s%root%foo%g /etc/passwd | head`
+is the same of  
+```
+grep -e root /etc/passwd | sed -e s:root:foo:g -e s%/foo%/foo/home%
+```  
+
+The non-word character after `s` can actually be any non-word character, so `s: s- s/ s% s@ s-` are all valid. Only, `s/` is not valid if used at the start, not in a pipe, because bash treats / specially.  
 
 Examples
 ========

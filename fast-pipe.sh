@@ -203,7 +203,7 @@ led() {
 
     if [ "$FASTPIPE_DEBUG" ]
     then
-        echo eval "${args[@]}"
+        echo "${args[@]}"
     fi
 
     eval "${args[@]}"

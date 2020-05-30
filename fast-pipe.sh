@@ -113,7 +113,7 @@ __fastpipe_led() {
 
             args+=("-e")
 
-        elif [[ "$arg" =~ s$notWord ]]
+        elif [[ "$arg" =~ $__fastPipe_sed_regexp ]]
         then
             
             if [ "$curCmd" != "sed" ]
